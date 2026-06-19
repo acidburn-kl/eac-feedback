@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>EAC Day 2 Feedback Survey</title>
+<style>
+  :root {
+    --primary: #5B2D8E;
+    --accent: #9B59B6;
+    --light-purple: #F3EBF9;
+    --dark: #1a1a2e;
+    --gray: #6b7280;
+    --light-gray: #f9fafb;
+    --border: #e5e7eb;
+    --success: #10b981;
+    --white: #ffffff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #2d1b69 100%);
+    min-height: 100vh;
+    padding: 24px 16px;
+    color: var(--dark);
+  }
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .header {
+    background: var(--white);
+    border-radius: 16px 16px 0 0;
+    padding: 32px;
+    border-bottom: 4px solid var(--primary);
+    text-align: center;
+  }
+  .header .badge {
+    display: inline-block;
+    background: var(--light-purple);
+    color: var(--primary);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+  .header h1 {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 6px;
+  }
+  .header .meta {
+    font-size: 13px;
+    color: var(--gray);
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+  .header .meta span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .progress-bar-wrap {
+    background: var(--white);
+    padding: 16px 32px;
+    border-bottom: 1px solid var(--border);
+  }
+  .progress-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--gray);
+    margin-bottom: 6px;
+  }
+  .progress-track {
+    background: var(--border);
+    border-radius: 8px;
+    height: 8px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    height: 100%;
+    border-radius: 8px;
+    transition: width 0.4s ease;
+  }
+  .section-card {
+    background: var(--white);
+    padding: 28px 32px;
+    border-bottom: 1px solid var(--border);
+    display: none;
+  }
+  .section-card.active { display: block; }
+  .section-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--light-purple);
+  }
+  .question { margin-bottom: 28px; }
+  .question:last-child { margin-bottom: 0; }
+  .q-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+  .q-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary);
+    color: white;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 700;
+    margin-right: 8px;
+    flex-shrink: 0;
+  }
+
+  /* Star rating */
+  .star-group { display: flex; gap: 8px; flex-wrap: wrap; }
+  .star-option { display: none; }
+  .star-option + label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--gray);
+    transition: all 0.2s;
+    flex: 1;
+    min-width: 120px;
+  }
+  .star-option:checked + label {
+    border-color: var(--primary);
+    background: var(--light-purple);
+    color: var(--primary);
+    font-weight: 600;
+  }
+  .star-option + label:hover { border-color: var(--accent); }
+
+  /* Radio pills */
+  .radio-group { display: flex; gap: 8px; flex-wrap: wrap; }
+  .radio-opt { display: none; }
+  .radio-opt + label {
+    padding: 9px 18px;
+    border: 2px solid var(--border);
+    border-radius: 24px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--gray);
+    transition: all 0.2s;
+  }
+  .radio-opt:checked + label {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: white;
+    font-weight: 600;
+  }
+  .radio-opt + label:hover { border-color: var(--accent); background: var(--light-purple); color: var(--primary);}
+
+  /* Scale */
+  .scale-wrap { display: flex; flex-direction: column; gap: 8px; }
+  .scale-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--gray); }
+  .scale-buttons { display: flex; gap: 6px; }
+  .scale-btn {
+    flex: 1;
+    padding: 10px 0;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: var(--white);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gray);
+    transition: all 0.2s;
+  }
+  .scale-btn:hover { border-color: var(--accent); color: var(--primary); }
+  .scale-btn.selected { background: var(--primary); border-color: var(--primary); color: white; }
+
+  /* NPS scale */
+  .nps-buttons { display: flex; gap: 4px; flex-wrap: wrap; }
+  .nps-btn {
+    width: 44px;
+    padding: 10px 0;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: var(--white);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray);
+    transition: all 0.2s;
+    text-align: center;
+  }
+  .nps-btn:hover { border-color: var(--accent); }
+  .nps-btn.selected { background: var(--primary); border-color: var(--primary); color: white; }
+
+  /* Checkboxes */
+  .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .cb-item { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+  .cb-item input[type="checkbox"] { display: none; }
+  .cb-box {
+    width: 18px; height: 18px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .cb-item input:checked ~ .cb-box {
+    background: var(--primary);
+    border-color: var(--primary);
+  }
+  .cb-item input:checked ~ .cb-box::after {
+    content: '✓';
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .cb-item span { font-size: 13px; color: var(--dark); }
+
+  /* Text input */
+  textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--dark);
+    resize: vertical;
+    min-height: 80px;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  textarea:focus { border-color: var(--primary); }
+  textarea::placeholder { color: #c0c0c0; }
+
+  /* Other text */
+  .other-input {
+    margin-top: 8px;
+    width: 100%;
+    padding: 8px 12px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+  }
+  .other-input:focus { border-color: var(--primary); }
+
+  /* Nav buttons */
+  .nav-row {
+    background: var(--white);
+    padding: 20px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 0 0 16px 16px;
+  }
+  .btn {
+    padding: 11px 28px;
+    border-radius: 24px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+  .btn-prev { background: var(--light-gray); color: var(--gray); border: 2px solid var(--border); }
+  .btn-prev:hover { border-color: var(--primary); color: var(--primary); }
+  .btn-next { background: var(--primary); color: white; }
+  .btn-next:hover { background: #4a2570; }
+  .btn-submit { background: var(--success); color: white; }
+  .btn-submit:hover { background: #059669; }
+  .step-indicator { font-size: 12px; color: var(--gray); font-weight: 600; }
+
+  /* Thank you screen */
+  .thank-you {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 60px 32px;
+    text-align: center;
+    display: none;
+  }
+  .thank-you.active { display: block; }
+  .thank-you .icon { font-size: 56px; margin-bottom: 20px; }
+  .thank-you h2 { font-size: 24px; font-weight: 800; color: var(--primary); margin-bottom: 10px; }
+  .thank-you p { font-size: 15px; color: var(--gray); line-height: 1.6; max-width: 400px; margin: 0 auto 24px; }
+  .export-btn {
+    padding: 12px 28px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 24px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .export-btn:hover { background: #4a2570; }
+
+  @media(max-width: 560px) {
+    .checkbox-grid { grid-template-columns: 1fr; }
+    .star-group { flex-direction: column; }
+    .nps-buttons { gap: 3px; }
+    .nps-btn { width: 36px; font-size: 12px; }
+    .header, .section-card, .nav-row, .progress-bar-wrap { padding-left: 18px; padding-right: 18px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="badge">Training Feedback</div>
+    <h1>EAC AI Enablement Training</h1>
+    <div style="font-size:15px;color:#5B2D8E;font-weight:700;margin-top:4px;">Microsoft Copilot Studio: Building AI Agents</div>
+    <div class="meta">
+      <span>💻 Live Online Session</span>
+    </div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-bar-wrap">
+    <div class="progress-labels">
+      <span id="section-label">Section 1 of 5</span>
+      <span id="pct-label">0% complete</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section-card active" id="sec-1">
+    <div class="section-title">Section 1 — Overall Experience</div>
+
+    <div class="question">
+      <div class="q-label"><span class="q-num">1</span>Overall, how would you rate today's session?</div>
+      <div class="star-group">
+        <input class="star-option" type="radio" name="q1" id="q1_5" value="5"/>
+        <label for="q1_5">⭐⭐⭐⭐⭐ Excellent</label>
+        <input class="star-option" type="radio" name="q1" id="q1_4" value="4"/>
+        <label for="q1_4">⭐⭐⭐⭐ Good</label>
+        <input class="star-option" type="radio" name="q1" id="q1_3" value="3"/>
+        <label for="q1_3">⭐⭐⭐ Average</label>
+        <input class="star-option" type="radio" name="q1" id="q1_2" value="2"/>
+        <label for="q1_2">⭐⭐ Fair</label>
+        <input class="star-option" type="radio" name="q1" id="q1_1" value="1"/>
+        <label for="q1_1">⭐ Poor</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="q-label"><span class="q-num">2</span>The pace of the training was:</div>
+      <div class="radio-group">
+        <input class="radio-opt" type="radio" name="q2" id="q2_slow" value="Too slow"/>
+        <label for="q2_slow">Too slow</label>
+        <input class="radio-opt" type="radio" name="q2" id="q2_right" value="About right"/>
+        <label for="q2_right">About right</label>
+        <input class="radio-opt" type="radio" name="q2" id="q2_fast" value="Too fast"/>
+        <label for="q2_fast">Too fast</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="q-label"><span class="q-num">3</span>How engaging was the session?</div>
+      <div class="scale-wrap">
+        <div class="scale-buttons" id="scale-q3"></div>
+        <div class="scale-labels"><span>1 – Not engaging</span><span>5 – Extremely engaging</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section-card" id="sec-2">
+    <div class="section-title">Section 2 — Learning & Confidence</div>
+
+    <div class="question">
+      <div class="q-label"><span class="q-num">4</span>How confident do you feel about creating or modifying a Copilot agent?</div>
+      <div class="scale-wrap">
+        <div class="scale-buttons" id="scale-q4"></div>
+        <div class="scale-labels"><span>1 – Not confident</span><span>5 – Very confident</span></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="q-label"><span class="q-num">5</span>Which topics were most valuable to you? <em style="font-weight:400;color:#9b59b6;">(Select all that apply)</em></div>
+      <div class="checkbox-grid" id="q5-checks">
+        <label class="cb-item"><input type="checkbox" name="q5" value="Understanding what AI agents are"/><div class="cb-box"></div><span>Understanding what AI agents are</span></label>
+        <label class="cb-item"><input type="checkbox" name="q5" value="Copilot Studio fundamentals"/><div class="cb-box"></div><span>Copilot Studio fundamentals</span></label>
+        <label class="cb-item"><input type="checkbox" name="q5" value="Creating an agent"/><div class="cb-box"></div><span>Creating an agent</span></label>
+        <label class="cb-item"><input type="checkbox" name="q5" value="Writing instructions and prompts"/><div class="cb-box"></div><span>Writing instructions and prompts</span></label>
+        <label class="cb-item"><input type="checkbox" name="q5" value="Testing and refining agents"/><div class="cb-box"></div><span>Testing and refining agents</span></label>
+        <label class="cb-item"><input type="checkbox" name="q5" value="Real-world business use cases"/><div class="cb-box"></div><span>Real-world business use cases</span></label>
+        <label class="cb-item"><input type="checkbox" name="q5" value="Seeing demonstrations"/><div class="cb-box"></div><span>Seeing demonstrations</span></label>
+        <label class="cb-item"><input type="checkbox" name="q5" value="Hands-on exercises"/><div class="cb-box"></div><span>Hands-on exercises</span></label>
+        <label class="cb-item" id="q5-other-cb"><input type="checkbox" name="q5" value="Other" id="q5-other-chk"/><div class="cb-box"></div><span>Other</span></label>
+      </div>
+      <input class="other-input" id="q5-other-text" placeholder="Please specify..." style="display:none;"/>
+    </div>
+
+    <div class="question">
+      <div class="q-label"><span class="q-num">6</span>I understand how AI agents can support Business Development activities.</div>
+      <div class="scale-wrap">
+        <div class="scale-buttons" id="scale-q6"></div>
+        <div class="scale-labels"><span>1 – Strongly disagree</span><span>5 – Strongly agree</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section-card" id="sec-3">
+    <div class="section-title">Section 3 — Business Impact</div>
+
+    <div class="question">
+      <div class="q-label"><span class="q-num">7</span>How likely are you to apply something from today's session in your work?</div>
+      <div class="radio-group">
+        <input class="radio-opt" type="radio" name="q7" id="q7_vl" value="Very likely"/><label for="q7_vl">Very likely</label>
+        <input class="radio-opt" type="radio" name="q7" id="q7_l" value="Likely"/><label for="q7_l">Likely</label>
+        <input class="radio-opt" type="radio" name="q7" id="q7_n" value="Neutral"/><label for="q7_n">Neutral</label>
+        <input class="radio-opt" type="radio" name="q7" id="q7_u" value="Unlikely"/><label for="q7_u">Unlikely</label>
+        <input class="radio-opt" type="radio" name="q7" id="q7_vu" value="Very unlikely"/><label for="q7_vu">Very unlikely</label>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="q-label"><span class="q-num">8</span>Which business processes could benefit from AI agents? <em style="font-weight:400;color:#9b59b6;">(Select all that apply)</em></div>
+      <div class="checkbox-grid">
+        <label class="cb-item"><input type="checkbox" name="q8" value="Research"/><div class="cb-box"></div><span>Research</span></label>
+        <label class="cb-item"><input type="checkbox" name="q8" value="Proposal creation"/><div class="cb-box"></div><span>Proposal creation</span></label>
+        <label class="cb-item"><input type="checkbox" name="q8" value="Customer communications"/><div class="cb-box"></div><span>Customer communications</span></label>
+        <label class="cb-item"><input type="checkbox" name="q8" value="Meeting preparation"/><div class="cb-box"></div><span>Meeting preparation</span></label>
+        <label class="cb-item"><input type="checkbox" name="q8" value="Document summarization"/><div class="cb-box"></div><span>Document summarization</span></label>
+        <label class="cb-item"><input type="checkbox" name="q8" value="Knowledge retrieval"/><div class="cb-box"></div><span>Knowledge retrieval</span></label>
+        <label class="cb-item"><input type="checkbox" name="q8" value="Follow-up emails"/><div class="cb-box"></div><span>Follow-up emails</span></label>
+        <label class="cb-item"><input type="checkbox" name="q8" value="Competitive analysis"/><div class="cb-box"></div><span>Competitive analysis</span></label>
+        <label class="cb-item"><input type="checkbox" name="q8" value="Other" id="q8-other-chk"/><div class="cb-box"></div><span>Other</span></label>
+      </div>
+      <input class="other-input" id="q8-other-text" placeholder="Please specify..." style="display:none;"/>
+    </div>
+
+    <div class="question">
+      <div class="q-label"><span class="q-num">9</span>What use case are you most interested in exploring with AI agents?</div>
+      <textarea name="q9" id="q9" placeholder="Share your thoughts..."></textarea>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section-card" id="sec-4">
+    <div class="section-title">Section 4 — Instructor Feedback</div>
+
+    <div class="question">
+      <div class="q-label"><span class="q-num">10</span>Daniel explained concepts clearly.</div>
+      <div class="scale-wrap">
+        <div class="scale-buttons" id="scale-q10"></div>
+        <div class="scale-labels"><span>1 – Strongly disagree</span><span>5 – Strongly agree</span></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="q-label"><span class="q-num">11</span>Daniel encouraged participation and questions.</div>
+      <div class="scale-wrap">
+        <div class="scale-buttons" id="scale-q11"></div>
+        <div class="scale-labels"><span>1 – Strongly disagree</span><span>5 – Strongly agree</span></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="q-label"><span class="q-num">12</span>What did Daniel do particularly well?</div>
+      <textarea name="q12" id="q12" placeholder="Share your thoughts..."></textarea>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section-card" id="sec-5">
+    <div class="section-title">Section 5 — Future Enablement & Closing</div>
+
+    <div class="question">
+      <div class="q-label"><span class="q-num">13</span>What topics would you like to learn next? <em style="font-weight:400;color:#9b59b6;">(Select all that apply)</em></div>
+      <div class="checkbox-grid">
+        <label class="cb-item"><input type="checkbox" name="q13" value="Prompt engineering"/><div class="cb-box"></div><span>Prompt engineering</span></label>
+        <label class="cb-item"><input type="checkbox" name="q13" value="Microsoft Copilot best practices"/><div class="cb-box"></div><span>Microsoft Copilot best practices</span></label>
+        <label class="cb-item"><input type="checkbox" name="q13" value="Advanced Copilot Studio"/><div class="cb-box"></div><span>Advanced Copilot Studio</span></label>
+        <label class="cb-item"><input type="checkbox" name="q13" value="Agent governance and security"/><div class="cb-box"></div><span>Agent governance and security</span></label>
+        <label class="cb-item"><input type="checkbox" name="q13" value="AI for sales and business development"/><div class="cb-box"></div><span>AI for sales and BD</span></label>
+        <label class="cb-item"><input type="checkbox" name="q13" value="Automating workflows"/><div class="cb-box"></div><span>Automating workflows</span></label>
+        <label class="cb-item"><input type="checkbox" name="q13" value="Using AI responsibly"/><div class="cb-box"></div><span>Using AI responsibly</span></label>
+        <label class="cb-item"><input type="checkbox" name="q13" value="Other" id="q13-other-chk"/><div class="cb-box"></div><span>Other</span></label>
+      </div>
+      <input class="other-input" id="q13-other-text" placeholder="Please specify..." style="display:none;"/>
+    </div>
+
+    <div class="question">
+      <div class="q-label"><span class="q-num">14</span>What is one thing we could improve for future sessions?</div>
+      <textarea name="q14" id="q14" placeholder="Your honest feedback helps us improve..."></textarea>
+    </div>
+
+    <div class="question">
+      <div class="q-label"><span class="q-num">15</span>What is one thing you learned today that will help you work more effectively?</div>
+      <textarea name="q15" id="q15" placeholder="Share your key takeaway..."></textarea>
+    </div>
+
+    <div class="question">
+      <div class="q-label"><span class="q-num">16</span>As a result of today's training, I feel more prepared to use AI tools responsibly and effectively in my role.</div>
+      <div class="scale-wrap">
+        <div class="scale-buttons" id="scale-q16"></div>
+        <div class="scale-labels"><span>1 – Strongly disagree</span><span>5 – Strongly agree</span></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="q-label"><span class="q-num">17</span>How likely are you to recommend this training to a colleague? <em style="font-weight:400;color:#9b59b6;">(0–10)</em></div>
+      <div class="scale-wrap" style="gap:10px;">
+        <div class="nps-buttons" id="nps-q17"></div>
+        <div class="scale-labels"><span>0 – Not at all likely</span><span>10 – Extremely likely</span></div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="q-label">💬 Anything else you'd like to share with Daniel or the EAC team?</div>
+      <textarea name="q18" id="q18" placeholder="Open comments..."></textarea>
+    </div>
+  </div>
+
+  <!-- Thank You -->
+  <div class="thank-you" id="thank-you">
+    <div class="icon">🎉</div>
+    <h2>Thank you for your feedback!</h2>
+    <p>Your responses help us improve every session. The EAC team and Daniel appreciate you taking the time to share your thoughts.</p>
+    <p style="font-size:12px;color:#9b59b6;margin-top:-12px;">Your responses have been recorded in the EAC feedback sheet.</p>
+    <button class="export-btn" onclick="exportJSON()">⬇ Download My Responses (JSON)</button>
+    <div id="submit-error" style="display:none;margin-top:12px;color:#e74c3c;font-size:13px;">⚠️ Submission failed. Please try again or download your responses.</div>
+  </div>
+
+  <!-- Nav -->
+  <div class="nav-row" id="nav-row">
+    <button class="btn btn-prev" id="btn-prev" onclick="navigate(-1)" style="visibility:hidden">← Back</button>
+    <span class="step-indicator" id="step-label">Section 1 of 5</span>
+    <button class="btn btn-next" id="btn-next" onclick="navigate(1)">Next →</button>
+  </div>
+
+</div>
+
+<script>
+  const totalSections = 5;
+  let current = 1;
+  const responses = {};
+
+  // Build scale buttons 1–5
+  ['q3','q4','q6','q10','q11','q16'].forEach(id => {
+    const wrap = document.getElementById('scale-' + id);
+    if (!wrap) return;
+    for (let i = 1; i <= 5; i++) {
+      const btn = document.createElement('button');
+      btn.className = 'scale-btn';
+      btn.type = 'button';
+      btn.textContent = i;
+      btn.dataset.q = id;
+      btn.dataset.v = i;
+      btn.onclick = function() {
+        document.querySelectorAll(`.scale-btn[data-q="${id}"]`).forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        responses[id] = i;
+      };
+      wrap.appendChild(btn);
+    }
+  });
+
+  // Build NPS 0–10
+  const npsWrap = document.getElementById('nps-q17');
+  for (let i = 0; i <= 10; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'nps-btn';
+    btn.type = 'button';
+    btn.textContent = i;
+    btn.onclick = function() {
+      document.querySelectorAll('.nps-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      responses['q17'] = i;
+    };
+    npsWrap.appendChild(btn);
+  }
+
+  // Other toggles
+  function setupOtherToggle(chkId, inputId) {
+    const chk = document.getElementById(chkId);
+    const inp = document.getElementById(inputId);
+    if (!chk || !inp) return;
+    chk.addEventListener('change', () => {
+      inp.style.display = chk.checked ? 'block' : 'none';
+    });
+  }
+  setupOtherToggle('q5-other-chk', 'q5-other-text');
+  setupOtherToggle('q8-other-chk', 'q8-other-text');
+  setupOtherToggle('q13-other-chk', 'q13-other-text');
+
+  function updateProgress() {
+    const pct = Math.round(((current - 1) / totalSections) * 100);
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('section-label').textContent = `Section ${current} of ${totalSections}`;
+    document.getElementById('pct-label').textContent = pct + '% complete';
+    document.getElementById('step-label').textContent = `Section ${current} of ${totalSections}`;
+    document.getElementById('btn-prev').style.visibility = current > 1 ? 'visible' : 'hidden';
+    const nextBtn = document.getElementById('btn-next');
+    if (current === totalSections) {
+      nextBtn.textContent = 'Submit ✓';
+      nextBtn.className = 'btn btn-submit';
+    } else {
+      nextBtn.textContent = 'Next →';
+      nextBtn.className = 'btn btn-next';
+    }
+  }
+
+  function collectSection() {
+    // radios
+    document.querySelectorAll(`#sec-${current} input[type="radio"]:checked`).forEach(r => {
+      responses[r.name] = r.value;
+    });
+    // checkboxes
+    const cbGroups = {};
+    document.querySelectorAll(`#sec-${current} input[type="checkbox"]:checked`).forEach(c => {
+      if (!cbGroups[c.name]) cbGroups[c.name] = [];
+      cbGroups[c.name].push(c.value);
+    });
+    Object.assign(responses, cbGroups);
+    // textareas
+    document.querySelectorAll(`#sec-${current} textarea`).forEach(t => {
+      if (t.value.trim()) responses[t.name] = t.value.trim();
+    });
+    // other texts
+    ['q5','q8','q13'].forEach(q => {
+      const inp = document.getElementById(q + '-other-text');
+      if (inp && inp.style.display !== 'none' && inp.value.trim()) {
+        if (!responses[q]) responses[q] = [];
+        responses[q] = responses[q].filter(v => v !== 'Other');
+        responses[q].push('Other: ' + inp.value.trim());
+      }
+    });
+  }
+
+  function navigate(dir) {
+    collectSection();
+    if (dir === 1 && current === totalSections) {
+      submitSurvey();
+      return;
+    }
+    document.getElementById('sec-' + current).classList.remove('active');
+    current += dir;
+    document.getElementById('sec-' + current).classList.add('active');
+    updateProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxT9JgKiz2s1DCCwtTHwSh8h99iI7-EtSjmNOCpE2XxUejBbo3Kj5pUCz8ZmjaOG1Y9SA/exec';
+
+  function submitSurvey() {
+    const nextBtn = document.getElementById('btn-next');
+    nextBtn.textContent = 'Submitting...';
+    nextBtn.disabled = true;
+
+    fetch(SHEET_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(responses)
+    })
+    .then(() => {
+      document.querySelectorAll('.section-card').forEach(s => s.classList.remove('active'));
+      document.getElementById('nav-row').style.display = 'none';
+      document.getElementById('progress-fill').style.width = '100%';
+      document.getElementById('section-label').textContent = 'Complete!';
+      document.getElementById('pct-label').textContent = '100% complete';
+      document.getElementById('thank-you').classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    })
+    .catch(() => {
+      nextBtn.textContent = 'Submit ✓';
+      nextBtn.disabled = false;
+      const err = document.getElementById('submit-error');
+      if (err) err.style.display = 'block';
+    });
+  }
+
+  function exportJSON() {
+    const blob = new Blob([JSON.stringify(responses, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'EAC_Day2_Survey_Response.json';
+    a.click();
+  }
+
+  updateProgress();
+</script>
+</body>
+</html>
